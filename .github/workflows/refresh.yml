@@ -69,9 +69,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          if git diff --cached --quiet; then
-            echo "Market is already up to date."
-            exit 0
-          fi
-          git commit -m "chore: refresh Fraq plugin market"
-          git push --force origin "HEAD:${MARKET_BRANCH}"
+          tree_sha="$(git write-tree)"
+          commit_sha="$(git commit-tree "${tree_sha}" -m "chore: refresh Fraq plugin market")"
+          git push -f origin "${commit_sha}:refs/heads/${MARKET_BRANCH}"
