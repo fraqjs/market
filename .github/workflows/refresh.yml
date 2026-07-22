@@ -2,7 +2,7 @@ name: Refresh Fraq plugin market
 
 on:
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: '47 * * * *'
   workflow_dispatch:
 
 permissions:
