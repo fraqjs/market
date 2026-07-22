@@ -1,0 +1,77 @@
+name: Refresh Fraq plugin market
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-market
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      MARKET_REPOSITORY: fraqjs/registry
+      MARKET_BRANCH: main
+      MARKET_TOKEN: ${{ secrets.FRAQ_MARKET_TOKEN }}
+    steps:
+      - name: Validate destination configuration
+        run: |
+          if [ -z "${MARKET_REPOSITORY}" ]; then
+            echo "::error::Set the FRAQ_MARKET_REPOSITORY Actions variable (owner/repository)."
+            exit 1
+          fi
+          if [ -z "${MARKET_TOKEN}" ]; then
+            echo "::error::Set the FRAQ_MARKET_TOKEN Actions secret with contents:write access."
+            exit 1
+          fi
+
+      - name: Checkout generator
+        uses: actions/checkout@v6
+        with:
+          path: source
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          version: 11.9.0
+          run_install: false
+
+      - name: Checkout market repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.MARKET_REPOSITORY }}
+          ref: ${{ env.MARKET_BRANCH }}
+          token: ${{ env.MARKET_TOKEN }}
+          path: market
+
+      - name: Install dependencies
+        working-directory: source
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate market file
+        working-directory: source
+        run: pnpm generate --output ../market/plugins.json --checkpoint ../market/checkpoint.json
+
+      - name: Force push generated market
+        working-directory: market
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          if git diff --cached --quiet; then
+            echo "Market is already up to date."
+            exit 0
+          fi
+          git commit -m "chore: refresh Fraq plugin market"
+          git push --force origin "HEAD:${MARKET_BRANCH}"
