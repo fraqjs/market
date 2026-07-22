@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dispatch-refresh": "node scripts/dispatch-refresh.js",
+    "dispatch-refresh": "tsx scripts/dispatch-refresh.ts",
     "generate": "tsx src/index.ts",
     "check": "biome check .",
     "typecheck": "tsc --noEmit",
