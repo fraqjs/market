@@ -89,6 +89,7 @@ export function marketFileFromPlugins(plugins: Iterable<MarketPlugin>): MarketFi
 
   return {
     version: 1,
+    updatedAt: new Date().toISOString(),
     categories,
     plugins: sortedPlugins,
   };

@@ -26,6 +26,7 @@ export interface MarketPlugin {
 
 export interface MarketFile {
   version: 1;
+  updatedAt: string;
   categories: readonly Category[];
   plugins: Record<string, MarketPlugin>;
 }
