@@ -28,6 +28,7 @@ describe('market package mapping', () => {
     const plugin = marketPluginFromManifest({
       name: 'fraq-plugin-echo',
       version: '1.2.3',
+      updatedAt: '2026-07-26T12:34:56.000Z',
       description: 'Echo',
       repository: { type: 'git', url: 'git+https://github.com/example/echo.git' },
       fraq: { category: 'utilities' },
@@ -35,13 +36,16 @@ describe('market package mapping', () => {
     assert.deepEqual(plugin, {
       name: 'fraq-plugin-echo',
       version: '1.2.3',
+      updatedAt: '2026-07-26T12:34:56.000Z',
       description: 'Echo',
       category: 'utilities',
       repository: 'https://github.com/example/echo',
       market: { unlisted: false },
     });
     assert.equal(packageRepository('git@github.com:example/echo.git'), 'https://github.com/example/echo');
-    assert.equal(marketPluginFromManifest({ name: 'fraq-plugin-other', version: '1.0.0' }).market.unlisted, true);
+    const pluginWithoutTime = marketPluginFromManifest({ name: 'fraq-plugin-other', version: '1.0.0' });
+    assert.equal(pluginWithoutTime.updatedAt, null);
+    assert.equal(pluginWithoutTime.market.unlisted, true);
   });
 
   it('sorts output by the market name while retaining the schema', () => {

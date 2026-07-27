@@ -71,6 +71,7 @@ export function marketPluginFromManifest(manifest: NpmPackageManifest): MarketPl
   return {
     name: packageName,
     version: typeof manifest.version === 'string' ? manifest.version : '',
+    updatedAt: typeof manifest.updatedAt === 'string' ? manifest.updatedAt : null,
     description,
     category,
     repository: packageRepository(manifest.repository),

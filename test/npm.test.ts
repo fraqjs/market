@@ -53,6 +53,7 @@ describe('npm registry client', () => {
         if (url.endsWith('/fraq-plugin-a')) {
           return jsonResponse({
             'dist-tags': { latest: '1.2.3' },
+            time: { '1.2.3': '2026-07-26T12:34:56.000Z' },
             versions: {
               '1.2.3': { name: 'fraq-plugin-a', version: '1.2.3', fraq: { category: 'utilities' } },
             },
@@ -66,7 +67,25 @@ describe('npm registry client', () => {
     assert.deepEqual(await registry.getLatestManifest('fraq-plugin-a'), {
       name: 'fraq-plugin-a',
       version: '1.2.3',
+      updatedAt: '2026-07-26T12:34:56.000Z',
       fraq: { category: 'utilities' },
+    });
+  });
+
+  it('uses null when npm has no publication time for the latest version', async () => {
+    const registry = new NpmRegistry({
+      registryUrl: 'https://registry.test',
+      fetch: async () =>
+        jsonResponse({
+          'dist-tags': { latest: '1.2.3' },
+          versions: { '1.2.3': { name: 'fraq-plugin-a', version: '1.2.3' } },
+        }),
+    });
+
+    assert.deepEqual(await registry.getLatestManifest('fraq-plugin-a'), {
+      name: 'fraq-plugin-a',
+      version: '1.2.3',
+      updatedAt: null,
     });
   });
 

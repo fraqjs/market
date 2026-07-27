@@ -16,6 +16,7 @@ export type Category = (typeof categories)[number];
 export interface MarketPlugin {
   name: string;
   version: string;
+  updatedAt: string | null;
   description: string;
   category: Category | null;
   repository: string | null;
@@ -39,6 +40,7 @@ export interface CheckpointFile {
 export interface NpmPackageManifest {
   name?: unknown;
   version?: unknown;
+  updatedAt?: unknown;
   description?: unknown;
   repository?: unknown;
   fraq?: unknown;
@@ -48,6 +50,7 @@ export interface NpmPackageDocument {
   name?: unknown;
   versions?: unknown;
   'dist-tags'?: unknown;
+  time?: unknown;
 }
 
 export interface NpmSearchResult {

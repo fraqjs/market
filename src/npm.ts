@@ -112,7 +112,16 @@ export class NpmRegistry {
     }
 
     const manifest = (document.versions as Record<string, unknown>)[latest];
-    return manifest !== null && typeof manifest === 'object' ? (manifest as NpmPackageManifest) : null;
+    if (manifest === null || typeof manifest !== 'object') {
+      return null;
+    }
+
+    const time = document.time;
+    const updatedAt = time !== null && typeof time === 'object' ? (time as Record<string, unknown>)[latest] : null;
+    return {
+      ...(manifest as NpmPackageManifest),
+      updatedAt: typeof updatedAt === 'string' ? updatedAt : null,
+    };
   }
 
   async getLatestManifests(packageNames: Iterable<string>): Promise<NpmPackageManifest[]> {
