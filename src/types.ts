@@ -16,7 +16,7 @@ export type Category = (typeof categories)[number];
 export interface MarketPlugin {
   name: string;
   version: string;
-  updatedAt: string | null;
+  updatedAt: string;
   description: string;
   category: Category | null;
   repository: string | null;

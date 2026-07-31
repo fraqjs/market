@@ -44,7 +44,7 @@ describe('market package mapping', () => {
     });
     assert.equal(packageRepository('git@github.com:example/echo.git'), 'https://github.com/example/echo');
     const pluginWithoutTime = marketPluginFromManifest({ name: 'fraq-plugin-other', version: '1.0.0' });
-    assert.equal(pluginWithoutTime.updatedAt, null);
+    assert.equal(pluginWithoutTime.updatedAt, '');
     assert.equal(pluginWithoutTime.market.unlisted, true);
   });
 
